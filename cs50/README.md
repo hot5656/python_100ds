@@ -209,3 +209,34 @@ for favorite in sorted(counts, key=lambda language: counts[language], reverse=Tr
     print(f"{favorite}: {counts[favorite]}")
 ```
 
+``` py
+from cs50 import SQL
+db = SQL("sqlite:///favorites.db")
+favorite = input("Favorite: ")
+rows = db.execute("SELECT (*) FROM favorites WHERE problem = 'Mario'")
+for row in rows:
+    print(row["Timestamp"])
+
+from cs50 import SQL
+db = SQL("sqlite:///favorites.db")
+favorite = input("Favorite: ")
+#rows = db.execute("SELECT COUNT(*) AS n FROM favorites WHERE problem = 'Mario'")
+rows = db.execute("SELECT COUNT(*) AS n FROM favorites WHERE problem = ?", favorite)
+row = rows[0]
+print(row["n"])
+
+# race
+db.execute("BEGIN TRANSACTION")
+rows = db.execute("SELECT likes FROM posts WHERE id = ?", id)
+likes = roes[0]["likes]
+db.execute("UPDATE posts SET likes = ? WHERE id = ?", likes + 1, id)
+db.execute("COMMIT)
+
+# inject
+# -- ignore right
+# rows = db.execute(f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'")
+# rows = db.execute(f"SELECT * FROM users WHERE username = 'mmalan@harvad.edu'--' AND password = '{password}'")
+rows = db.execute("SELECT * FROM users WHERE username = ? AND password = ?", username, password )
+if row:
+    ...
+```
