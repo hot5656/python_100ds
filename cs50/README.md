@@ -4,8 +4,20 @@
 pip3 install cs50
 # install pyttsx3
 pip install pyttsx3
+# install flask
+pip install flask
+# install flask_session
+pip install flask_session
 # upgrade pip
 python.exe -m pip install --upgrade pip
+# install pillow
+pip install pillow
+
+# install by py
+py -m pip install pillow
+
+# None
+session["name"] = None
 ```
 
 ``` py

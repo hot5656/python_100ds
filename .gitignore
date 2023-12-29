@@ -1,3 +1,4 @@
 pythonProject-*
 *.png
 __pycache__/
+flask_session/
