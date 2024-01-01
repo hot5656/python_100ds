@@ -3,6 +3,9 @@ class Node():
         self.state = state
         self.parent = parent
         self.action = action
+    def print(self):
+        # print("\n Node self.state self.state self.state", self.state, self.parent, self.action)
+        return
 
 
 class StackFrontier():
@@ -11,6 +14,7 @@ class StackFrontier():
 
     def add(self, node):
         self.frontier.append(node)
+        # print("add show",self.frontier)
 
     def contains_state(self, state):
         return any(node.state == state for node in self.frontier)
@@ -25,6 +29,9 @@ class StackFrontier():
             node = self.frontier[-1]
             self.frontier = self.frontier[:-1]
             return node
+
+    # def print(self):
+    #     print("\n self.frontier:", self.frontier)
 
 
 class QueueFrontier(StackFrontier):
