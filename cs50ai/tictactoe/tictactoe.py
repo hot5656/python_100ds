@@ -42,31 +42,33 @@ def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
+    # print("board:", board)
     action = set()
-    for i, row in board:
-        for j, item in row:
+    for i, row in enumerate(board):
+        for j, item in enumerate(row):
             if item == EMPTY:
                 action.add((i, j))
 
 
-    print("action", action)
-    raise NotImplementedError
-    # return X
+    # print("action", action)
+    # raise NotImplementedError
+    return action
 
 
 def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    print("board-result", board)
-    print("board-result", action)
-    print("board:", board)
-    print("action:", action)
+    # print("board-result", board)
+    # print("board-result", action)
+    # print("board:", board)
+    # print("action:", action)
     user = player(board)
-    board[action[0]][action[1]] = player(board)
-    print("board:", board)
+    board_run = copy.deepcopy(board)
+    board_run[action[0]][action[1]] = player(board)
+    # print("board:", board)
     # raise NotImplementedError
-    return board
+    return board_run
 
 
 def winner(board):
@@ -91,8 +93,14 @@ def terminal(board):
     # raise NotImplementedError
 
     is_teminal = False
+    empty_count = 0
+    for row in board:
+        for item in row:
+            if item == EMPTY:
+                empty_count += 1
+
     score = utility(board)
-    if score == 1 or score == -1 or minimax(board) == None:
+    if score == 1 or score == -1 or empty_count == 0:
         is_teminal = True
 
     return is_teminal
@@ -135,51 +143,168 @@ def utility(board):
             score = -1
 
     # raise NotImplementedError
-    for row in board:
-        print(row)
-    print("score:", score)
+    # for row in board:
+    #     print(row)
+    # print("score:", score)
     return score
 
+def score_count(board) :
+    # print("-------")
+    # for row in board:
+    #     print(row)
+
+
+    user = player(board)
+    if user == X:
+        score = -100
+    else:
+        score = 100
+
+    if terminal(board):
+        return utility(board)
+
+    all_actions = actions(board)
+    # print(" score action", all_actions)
+    for action in all_actions:
+        next = result(board, action)
+        run_score = score_count(next)
+        if user == X:
+            if run_score > score:
+                score = run_score
+        else:
+            if run_score < score:
+                score = run_score
+    # print("--> score:", score)
+    return  score
 
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
     user = player(board)
-    fair = set()
-    win = set()
+    # fair = set()
+    # win = set()
     minimx_action = None
+    if user == X:
+        score = -1
+    else:
+        score = 1
     print("minimax action ===============")
-    for i in range(3):
-        for j in range(3):
-            if board[i][j] == EMPTY :
-                # temp_board = board
-                temp_board = copy.deepcopy(board)
-                temp_board[i][j] = user
-                # print("temp_board:", temp_board)
-                score = utility(temp_board)
-                # print("user, score:", user, score)
-                if user == X and score == 1:
-                    # win.add(i)
-                    # win.add(j)
-                    win = (i, j)
-                    print("win:", win)
-                    break
-                elif user == O and score == -1:
-                    # win.add(i)
-                    # win.add(j)
-                    win = (i, j)
-                    print("win:", win)
-                    break
-                elif score == 0 and len(fair) == 0:
-                    # fair.add(i)
-                    # fair.add(j)
-                    fair = (i, j)
-                    print("fair:", fair)
-    if len(win) > 0:
-        minimx_action = win
-    elif len(fair) > 0:
-        minimx_action = fair
-    print("minimax action:", minimx_action)
-    # raise NotImplementedError
+    all_aictions = actions(board)
+    print("action", all_aictions)
+    for action in all_aictions:
+          next = result(board, action)
+          run_score = score_count(next)
+          print("action, score:", action, run_score)
+          if user == X:
+              if run_score > score:
+                  score = run_score
+                  minimx_action = action
+          else:
+              if run_score < score:
+                  score = run_score
+                  minimx_action = action
     return minimx_action
+
+    # raise NotImplementedError
+    # all_aictions = actions(board)
+    # print("action", all_aictions)
+    # for action in all_aictions:
+    #     # temp_board = copy.deepcopy(board)
+    #     # print("temp_board:", temp_board)
+    #     next = result(board, action)
+    #     run_score = utility(next)
+    #     if terminal(next) or run_score == 1 or run_score == -1:
+    #         print("  action, result, score", action, next, utility(next))
+    #         if user == X:
+    #             if run_score > score:
+    #                 score = run_score
+    #                 minimx_action = action
+    #         else:
+    #             if run_score < score:
+    #                 score = run_score
+    #                 minimx_action = action
+    #     # else:
+    #     #     minimax(temp_board)
+
+    # print("minimx_action:", minimx_action)
+
+
+    # raise NotImplementedError
+#     for i in range(3):
+#         for j in range(3):
+#             if board[i][j] == EMPTY :
+#                 # temp_board = board
+#                 temp_board = copy.deepcopy(board)
+#                 temp_board[i][j] = user
+#                 # print("temp_board:", temp_board)
+#                 score = utility(temp_board)
+#                 # print("user, score:", user, score)
+#                 if user == X and score == 1:
+#                     # win.add(i)
+#                     # win.add(j)
+#                     win = (i, j)
+#                     print("win:", win)
+#                     break
+#                 elif user == O and score == -1:
+#                     # win.add(i)
+#                     # win.add(j)
+#                     win = (i, j)
+#                     print("win:", win)
+#                     break
+#                 elif score == 0 and len(fair) == 0:
+#                     # fair.add(i)
+#                     # fair.add(j)
+#                     fair = (i, j)
+#                     print("fair:", fair)
+#     if len(win) > 0:
+#         minimx_action = win
+#     elif len(fair) > 0:
+#         minimx_action = fair
+#     print("minimax action:", minimx_action)
+#     # raise NotImplementedError
+#     return minimx_action
+
+# def minimax(board):
+#     """
+#     Returns the optimal action for the current player on the board.
+#     """
+#     user = player(board)
+#     fair = set()
+#     win = set()
+#     minimx_action = None
+#     print("minimax action ===============")
+#     actions(board)
+#     for i in range(3):
+#         for j in range(3):
+#             if board[i][j] == EMPTY :
+#                 # temp_board = board
+#                 temp_board = copy.deepcopy(board)
+#                 temp_board[i][j] = user
+#                 # print("temp_board:", temp_board)
+#                 score = utility(temp_board)
+#                 # print("user, score:", user, score)
+#                 if user == X and score == 1:
+#                     # win.add(i)
+#                     # win.add(j)
+#                     win = (i, j)
+#                     print("win:", win)
+#                     break
+#                 elif user == O and score == -1:
+#                     # win.add(i)
+#                     # win.add(j)
+#                     win = (i, j)
+#                     print("win:", win)
+#                     break
+#                 elif score == 0 and len(fair) == 0:
+#                     # fair.add(i)
+#                     # fair.add(j)
+#                     fair = (i, j)
+#                     print("fair:", fair)
+#     if len(win) > 0:
+#         minimx_action = win
+#     elif len(fair) > 0:
+#         minimx_action = fair
+#     print("minimax action:", minimx_action)
+#     # raise NotImplementedError
+#     return minimx_action
