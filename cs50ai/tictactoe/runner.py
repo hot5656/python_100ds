@@ -111,6 +111,7 @@ while True:
 
         # Check for AI move
         if user != player and not game_over:
+            print("user, player:", user, player)
             if ai_turn:
                 time.sleep(0.5)
                 move = ttt.minimax(board)
