@@ -15,11 +15,3 @@ print('產生 3個 0~1 隨機浮點數\n',
                   np.random.random_sample(3),
                   np.random.sample(3))
 print('隨機挑選數值', np.random.choice([1,2,3,4,5,6]))
-
-
-
-
-
-
-
-

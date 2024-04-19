@@ -1,2 +1,6 @@
 *.ttf
 *.csv
+*.json
+*.xlsx
+*.html
+*.db
