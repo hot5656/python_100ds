@@ -1,4 +1,4 @@
-# 月交易資訊
+# 年交易資訊
 # https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20240430&stockNo=2317&response=json&_=1714460309678
 
 import pandas as pd
