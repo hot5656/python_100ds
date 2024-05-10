@@ -1,23 +1,18 @@
-# 1111 擷取職缺資料 存至 excel
+# 104 擷取職缺資料 存至 excel
 import requests
 from bs4 import BeautifulSoup
 import  openpyxl
 import os
 from datetime import datetime
 
-job_no = 0
 def main():
-    global job_no
-
     page_index = 0
     index = 1
-    # job = '前端工程師'
-    job = '硬體研發主管'
-    file_job = "job1.xlsx"
+    # job_request = '前端工程師'
+    job_request = '硬體研發主管'
+    file_job = "job11.xlsx"
     current_date = datetime.now()
     date_string = current_date.strftime("%Y-%m-%d")
-
-    job_url = f'https://www.1111.com.tw/search/job?col=wc&ks={job}&tt=1&page='
 
     list_titles =["職務名稱",
             "工作網址",
@@ -33,7 +28,7 @@ def main():
     workbook_temp = openpyxl.Workbook()
     # 工作表 #1
     sheet = workbook.worksheets[0]
-    sheet.title = f"1111 {date_string} {job}"
+    sheet.title = f"104 {date_string} {job_request}"
     sheet_temp = workbook_temp.worksheets[0]
     # 新增一列
     sheet.append(list_titles)
@@ -41,16 +36,15 @@ def main():
     rows_total = 0
     while True:
         page_index += 1
-        jobs = get_jobs(job_url+str(page_index), index)
-        if page_index == 1:
-            print(f"-- job_no = {job_no} --")
+        job_url = f'https://www.104.com.tw/jobs/search/?ro=1&keyword={job_request}&expansionType=area,spec,com,job,wf,wktm&order=1&asc=0&page={page_index}&mode=s&jobsource=index_s&langFlag=0&langStatus=0&recommendJob=1&hotJob=1'
+        jobs = get_jobs(job_url+str(page_index))
         rows = len(jobs)
         rows_total += rows
-        # if no more data break
-        if rows == 0:
+        if len(jobs) <= 0 :
             break
         for job in jobs:
             show_job(f"({index}-{page_index},{rows})", job, sheet, sheet_temp)
+            # print(f"{index}-{page_index},{rows}")
             index += 1
         print(f"page {page_index} = {rows}")
     print(f"rows_total = {rows_total}")
@@ -59,16 +53,27 @@ def main():
     workbook.save(file_job)
 
 def show_job(head, job, sheet, sheet_temp):
-    work = job.select_one(".title a")
+    work = job.select_one(".b-tit a")
     title = work.text
-    work_url =  "https://www.1111.com.tw" + work['href']
-    comapny = job.select_one(".company a").text.split('|')
-    comapny_name = comapny[0]
-    comapny_category = comapny[1].strip()
-    work_location = job.select_one(".other a")['data-after']
-    salary = job.select_one(".other span")['data-after']
-    apply_people =  job.select_one(".people p").text.replace("應徵人數｜", "").replace(" 人", "")
-    other = job.select_one(".introduce").text
+    work_url =  work['href']
+    comapny_name = job.select_one(".b-list-inline.b-clearfix:not(.b-content) a").text.strip()
+    comapny_category = job.select(".b-list-inline.b-clearfix:not(.b-content) li")[-1].text
+    work_location = job.select_one(".b-list-inline.b-clearfix.job-list-intro.b-content li").text
+    try:
+        default = job.select_one(".job-list-tag .b-tag--default")
+        if default:
+            salary = default.text
+        else:
+            salary = job.select_one(".job-list-tag.b-content a").text
+    except:
+        salary = "*****************wait check *******************"
+
+    apply_people =  job.select_one(".b-block__right.b-pos-relative a").text.replace("人應徵", "")
+    try:
+        other = job.select_one(".job-list-item__info").text
+    except:
+        # 無列出
+        other = ""
 
     # check error
     try:
@@ -100,10 +105,10 @@ def show_job(head, job, sheet, sheet_temp):
     # print(f"    工作地點: {work_location}")
     # print(f"    薪資:     {salary}")
     # print(f"    應徵人數: {apply_people}")
-    # # print(f"    其他事項: {other}")
+    # print(f"    其他事項: {other}")
 
-def get_jobs(url, index):
-    global job_no
+def get_jobs(url):
+    jobs = []
 
     try:
         resp = requests.get(url)
@@ -112,20 +117,9 @@ def get_jobs(url, index):
 
     if resp and resp.status_code == 200:
         soup = BeautifulSoup(resp.text, "html.parser")
+        jobs = soup.select('article.b-block--top-bord:not(.b-block--ad)')
 
-        # count job number
-        if job_no == 0:
-            try:
-                job_no = int(soup.select_one(".top .left span").text)
-            except:
-                job_no = 0
-
-        try:
-            jobs = soup.select(".item__job")
-        except:
-             jobs = []
-
-        return jobs
+    return jobs
 
 if __name__ == '__main__':
     main()

@@ -7,8 +7,13 @@ from matplotlib.font_manager import fontManager
 fontManager.addfont('NotoSansTC-Regular.ttf')
 matplotlib.rc('font', family='Noto Sans TC')
 
+# title
+plt.title('區域圓形圖', fontsize=20)
+
 sizes = [25, 30, 15, 10]
-labels = ['北部', '西部', '東部', '南部']
+locations = ['北部', '西部', '東部', '南部']
+# label 加入數量
+labels = [f"{location} ({size})" for location, size in zip(locations, sizes)]
 colors = ['red', 'green', 'blue', 'yellow']
 explode = (0, 0, 0.2, 0)
 # labels 項目標題
@@ -29,6 +34,7 @@ plt.pie(sizes,
         startangle = 90)
 # label 位置:upper right(default)
 # plt.legend(loc = 'best')
-# 會擋到
-# plt.legend()
+# bbox_to_anchor 1.1:距中心位置 0.5:高度位置
+plt.legend(loc='best', bbox_to_anchor=(1.1, 0.5))
+
 plt.show()
