@@ -12,6 +12,7 @@ def main():
     # job_request = '前端工程師'
     job_request = '硬體研發工程師'
     file_job = "job21.xlsx"
+    source =  "CakeResume"
     current_date = datetime.now()
     date_string = current_date.strftime("%Y-%m-%d")
 
@@ -29,7 +30,7 @@ def main():
     workbook_temp = openpyxl.Workbook()
     # 工作表 #1
     sheet = workbook.worksheets[0]
-    sheet.title = f"104 {date_string} {job_request}"
+    sheet.title = f"{source} {date_string} {job_request}"
     sheet_temp = workbook_temp.worksheets[0]
     # 新增一列
     sheet.append(list_titles)
