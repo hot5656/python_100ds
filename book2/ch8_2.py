@@ -40,3 +40,5 @@ plt.ylabel('回收問卷')
 
 plt.grid()
 plt.show()
+# 斜率750.00
+# 截距-333.33
