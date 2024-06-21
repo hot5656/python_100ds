@@ -1,5 +1,5 @@
 # 使用 scikit-learn LinearRegression 建立線性回歸模型
-# 繪製身高與體中資料圖表
+# 繪製身高與體重資料圖表
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import numpy as np
@@ -28,7 +28,7 @@ print(f"reg(height[:,0]) = {reg(height[:,0])}")
 
 # 建立線性回歸模型
 model = LinearRegression()
-# model.fit(X=height, y=weight) 做數據擬合, X必需為二維陣列
+# 數據擬合模型 model.fit(X=height, y=weight) 做數據擬合, X必需為二維陣列
 model.fit(X=height, y=weight)
 # y_pred = model.predict(X),執行數據預測 X必需為二維陣列
 y_pred = model.predict(height)
