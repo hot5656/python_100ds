@@ -1,3 +1,4 @@
+# 繪製散點圖
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -8,7 +9,6 @@ plt.rcParams["axes.unicode_minus"] = False
 
 # boston data url : http://lib.stat.cmu.edu/datasets/boston
 boston = pd.read_csv("boston.csv", sep='\s+')
-
 
 # 建立兩個子圖畫布
 fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10,5))

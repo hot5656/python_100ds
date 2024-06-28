@@ -9,8 +9,9 @@ data = {
     'weight' : [ 53,  62,  58,  71,  72,  69,  80,  91,  78,  70],
 }
 
+# 建立 DataFrmae
 df = pd.DataFrame(data)
-
+# 建立自變數和目標變數
 X = df[['height', 'waist']]
 y = df['weight']
 
@@ -22,6 +23,7 @@ X_train, X_test, y_train, y_test = \
 model = LinearRegression()
 model.fit(X_train, y_train)
 
+# 查看模型的截距與係數
 intercept = model.intercept_
 coefficients = model.coef_
 print(f"y截距(b0)  : {intercept:.3f}")

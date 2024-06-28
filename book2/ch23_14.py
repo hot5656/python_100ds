@@ -1,3 +1,4 @@
+# 繪製3D散點圖
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -17,7 +18,7 @@ ax = fig.add_subplot(projection='3d')
 ax.scatter(boston['LSTAT'], boston['RM'], boston['MEDV'], color='b')  # 散佈圖
 
 # set title
-ax.set_title('繪圖3D網格圖', fontsize=16, color='b')
+ax.set_title('3D散點圖', fontsize=16, color='b')
 # set label
 ax.set_xlabel('低收入比例', color='g')
 ax.set_ylabel('房間數', color='g')

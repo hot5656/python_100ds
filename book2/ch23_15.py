@@ -1,3 +1,4 @@
+# 獲得 R平方判定係數,截距與係數
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -38,3 +39,9 @@ print(f"R2_Score:{r2_score(y_test, y_pred):.3f}")
 
 # 儲存模型
 dump(model, 'boston_model.joblib')
+
+# y截距(b0)  : 2.493
+# 斜率(b1,b2): [-0.659  4.539]
+# 線性迴歸方程式:
+# y = 2.493 + (-0.659)*x1 + (4.539)*x2
+# R2_Score:0.675

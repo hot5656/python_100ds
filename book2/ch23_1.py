@@ -9,18 +9,17 @@ data = {
     'weight' : [ 53,  62,  58,  71,  72,  69,  80,  91,  78,  70],
 }
 
+# 建立 DataFrmae
 df = pd.DataFrame(data)
-# print(df)
-
+# 建立自變數和目標變數
 X = df[['height', 'waist']]
 y = df['weight']
-# print(X)
-# print(y)
 
 # 建立線性迴歸模型及擬合數據
 model = LinearRegression()
 model.fit(X, y)
 
+# 查看模型的截距與係數
 intercept = model.intercept_
 coefficients = model.coef_
 print(f"y截距(b0)  : {intercept:.3f}")
