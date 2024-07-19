@@ -1,3 +1,4 @@
+# 測試應用公式
 from joblib import load
 
 model = load('bank_ch24_1_2.joblib')

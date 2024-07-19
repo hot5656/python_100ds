@@ -3,4 +3,21 @@
   "editor.insertSpaces": true,
   "editor.tabSize": 4,
   "files.trimTrailingWhitespace": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "env": {
+        "PATH": "${env:PATH};D:\\app\\python_other\\Graphviz-12.0.0-win64\\bin"
+      }
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "env": {
+        "PATH": "${env:PATH};D:\\app\\python_other\\Graphviz-12.0.0-win64\bin"
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
 }

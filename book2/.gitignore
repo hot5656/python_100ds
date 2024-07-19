@@ -1,2 +1,7 @@
 *.joblib
 *.pkl
+UCI_Credit_Card.csv
+new_diabetes.csv
+WA_Fn-UseC_-Telco-Customer-Churn.csv
+dtc_tree
+dt_classifier_tree

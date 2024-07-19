@@ -42,6 +42,7 @@ model.fit(X_train, y_train)
 
 # 使用模型進行測試
 y_pred = model.predict(X_test)
+# 計算準確度
 print(f"準確度 : {accuracy_score(y_test, y_pred)}")
 print(f"真實數據\n {y_test}")
 print(f"估計數據\n {y_pred}")
