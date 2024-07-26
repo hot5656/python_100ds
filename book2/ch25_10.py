@@ -25,7 +25,7 @@ for column in df.columns:
 X = df.drop('Churn', axis=1)
 y = df['Churn']
 X_train, X_test, y_train, y_test = \
-    train_test_split(X, y, test_size=0.3, random_state=5)
+    train_test_split(X, y, test_size=0.2, random_state=1)
 
 # 建立決策樹模型並進行訓練
 # dtc = DecisionTreeClassifier()
@@ -38,7 +38,7 @@ dtc.fit(X_train, y_train)
 y_pred = dtc.predict(X_test)
 
 # 準確率
-print(f"準確率 : {dtc.score(X_test, y_test):.2f}")
+print(f"準確率 : {dtc.score(X_test, y_test)}")
 
 # 計算混淆矩陣並輸出
 # 測試準確對照表
@@ -65,16 +65,15 @@ print(f"分類報告(Classification Report)\n{report}")
 # weighted avg       0.73      0.73      0.73      2113
 
 # max_depth=5
-# 準確率 : 0.79
+# 準確率 : 0.8048261178140526
 # 混淆矩陣(Confusion Matix):
-# [[1336  208]
-#  [ 234  335]]
+# [[953 108]
+#  [167 181]]
 # ----------------------------------------------------------------------
 # 分類報告(Classification Report)
 #               precision    recall  f1-score   support
-#            0       0.85      0.87      0.86      1544
-#            1       0.62      0.59      0.60       569
-#     accuracy                           0.79      2113
-#    macro avg       0.73      0.73      0.73      2113
-# weighted avg       0.79      0.79      0.79      2113
-
+#            0       0.85      0.90      0.87      1061
+#            1       0.63      0.52      0.57       348
+#     accuracy                           0.80      1409
+#    macro avg       0.74      0.71      0.72      1409
+# weighted avg       0.80      0.80      0.80      1409
