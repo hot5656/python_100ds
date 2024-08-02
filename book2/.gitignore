@@ -6,3 +6,8 @@ WA_Fn-UseC_-Telco-Customer-Churn.csv
 dtc_tree
 dt_classifier_tree
 adult.csv
+sales.csv
+features.csv
+stores.csv
+RetailDataAnalytics.csv
+tree_reg

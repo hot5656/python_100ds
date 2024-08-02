@@ -21,6 +21,19 @@ for col in categorical_features:
 X = data.drop('income', axis=1)
 y = data['income']
 
+# 使用所有特徵訓練決策樹並計算特徵重要性
+dtc = DecisionTreeClassifier(random_state=5)
+dtc.fit(X, y)
+importances = dtc.feature_importances_
+features = X.columns
+
+# 獲得最重要7個特徵
+# p.argsort 取出由小到大 array's index
+indices = np.argsort(importances)[-7:]
+# top 7 features' name
+top_features = [features[i] for i in indices]
+
+X = data[top_features]
 X_train, X_test, y_train, y_test = \
     train_test_split(X, y, test_size=0.2, random_state=5)
 
@@ -33,4 +46,4 @@ y_pred = dtc.predict(X_test)
 # 準確率
 print(f"準確率 : {accuracy_score(y_test, y_pred):.3f}")
 
-# 準確率 : 0.809
+# 準確率 : 0.803

@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 # 讀取 csv
@@ -24,8 +24,11 @@ y = data['income']
 X_train, X_test, y_train, y_test = \
     train_test_split(X, y, test_size=0.2, random_state=5)
 
-# 建立決策樹模型並進行訓練
-dtc = DecisionTreeClassifier(random_state=5)
+# 建立模型
+# n_estimators 設計隨機森林有機棵樹,更多的樹可能會有更好的性能
+#              但也同時增加訓練時間及模型的大小(default 100)
+# max_depth=5  深度設定
+dtc = RandomForestClassifier(n_estimators=100, random_state=5)
 dtc.fit(X_train, y_train)
 # 進行預測
 y_pred = dtc.predict(X_test)
@@ -33,4 +36,4 @@ y_pred = dtc.predict(X_test)
 # 準確率
 print(f"準確率 : {accuracy_score(y_test, y_pred):.3f}")
 
-# 準確率 : 0.809
+# 準確率 : 0.854
