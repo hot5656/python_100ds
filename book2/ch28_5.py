@@ -1,3 +1,4 @@
+# 計算樣本到決策邊界(超平面)的距離
 from sklearn import svm
 
 # 特徵數據: 重量,顏色
