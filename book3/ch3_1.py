@@ -1,4 +1,4 @@
-# 抓取公開資訊
+# 抓取每日歷史紀錄
 # pip3 install yfinance
 import yfinance as yf
 
