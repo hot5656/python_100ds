@@ -35,5 +35,38 @@ def Get_StockPrice(Symbol, Date):
     print(StockPrice)
     return StockPrice
 
+def Get_IndexPrice(Date):
+    url = f'https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date={Date}&type=ALL'
+
+    data = requests.get(url).text
+    json_data = json.loads(data)
+
+    # print(json_data)
+
+    # 打印出完整的 json_data 以檢查響應
+    print(json_data)
+
+    Index_data = json_data['data']
+
+    # 假設我們只需要大盤指數的相關欄位
+    IndexPrice = pd.DataFrame(Index_data, columns=['Date', 'Index', 'Change', 'Volume'])
+
+    IndexPrice['Date'] = IndexPrice['Date'].str.replace('/', '').astype(int) + 19110000
+    IndexPrice['Date'] = pd.to_datetime(IndexPrice['Date'].astype(str))
+
+    # 轉換數據類型
+    IndexPrice['Index'] = IndexPrice['Index'].str.replace(',', '').astype(float)
+    IndexPrice['Change'] = IndexPrice['Change'].str.replace(',', '').astype(float)
+    IndexPrice['Volume'] = IndexPrice['Volume'].str.replace(',', '').astype(float)
+
+    IndexPrice = IndexPrice.set_index('Date', drop=True)
+
+    print(IndexPrice)
+    return IndexPrice
+    # return 1
+
 if __name__ == '__main__':
-    data = Get_StockPrice('9921','20230101')
+    # data = Get_StockPrice('9921','20230101')
+    # data = Get_StockPrice('9921','20241001')
+    data = Get_StockPrice('9921','20241016')
+    data = Get_IndexPrice('20241001')

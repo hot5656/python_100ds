@@ -158,7 +158,7 @@ for index, row in df_all.iterrows():
     # print(f'year={year}')
     year_start = year + '0101'
     month_data = Get_Month_StockPrice(stock_code, year_start)
-    if len(month_data) <= 1:
+    if len(month_data) == 0:
         # print("no stock data...")
         print(f"{year} - 資料不足")
     else:
@@ -178,6 +178,6 @@ for index, row in df_all.iterrows():
         year_last_price = month_data.iloc[-1]["Average"]
         # print(f"現金股利={cash_dividend}, 股票股利={stock_dividend}")
         # print(f'1st={year_1st_price}, last={year_last_price}')
-        rate = round((((year_last_price * ( 1 + stock_dividend) + cash_dividend)/year_1st_price) - 1) * 100, 2)
+        rate = round((((year_last_price * ( 1 + stock_dividend/100) + cash_dividend)/year_1st_price) - 1) * 100, 2)
         print(f"{year}  股價: {year_1st_price:7} --> {year_last_price:7}, 現金股利={cash_dividend:5}, 股票股利={stock_dividend:5}, 值利率={rate:7}%")
         # break
