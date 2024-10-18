@@ -20,6 +20,16 @@ def Current_Index():
     # print(f"hist_data={today_data}")
     return round(closing_value,2)
 
+def Current_Index2():
+    stock_url = 'https://www.google.com/finance/quote/IX0001:TPE'
+    web = requests.get(stock_url)
+    soup = BeautifulSoup(web.text, "html.parser")
+
+    # 爬取即時指數
+    index = soup.select("div[class*='YMlKec fxKbKc']")[0].get_text().replace(",", "")
+    print(index)
+    return index
+
 
 def Current_stock_Price(stock_code):
     # 9921 巨大集團在 Yahoo Finance 的代碼是 "9921.TW"
@@ -103,16 +113,18 @@ def Get_Day_StockPrice(Symbol, Date):
 stock_code = '9921'
 today = datetime.now().strftime('%Y%m%d')
 index = Current_Index()
+index2 = Current_Index2()
 stock_price = Current_stock_Price(stock_code)
 stock_price2 = Current_stock_Price2(stock_code)
 
-print(f"{today} index={index}, {stock_code} price={stock_price} {stock_price2}")
+print(f"{today} index={index} {index2}, {stock_code} price={stock_price} {stock_price2}")
 
 days = 1
 
 while(days<10):
     yesterday = (datetime.now() - timedelta(days=days)).strftime('%Y%m%d')
     index_value = Get_IndexPrice(yesterday)
+    print(f'({days}) {index_value}')
     if len(index_value) != 0:
         # print(f' days={days}, {index_value}')
         print(f'{(datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")} index : {index_value[1]}')
@@ -124,10 +136,11 @@ stock_price = Get_Day_StockPrice(stock_code, today)
 # print(f"today={today}")
 # print(stock_price)
 # print(stock_price.index[-1].strftime('%Y-%m-%d'), stock_price['Close'].iloc[-1])
-if (stock_price.index[-1].strftime('%Y-%m-%d') == today):
+if (stock_price.index[-1].strftime('%Y-%m-%d') != today):
     yesterday_date = stock_price.index[-1].strftime('%Y-%m-%d')
     yesterday_price = stock_price['Close'].iloc[-1]
 else:
     yesterday_date = stock_price.index[-2].strftime('%Y-%m-%d')
     yesterday_price = stock_price['Close'].iloc[-2]
 print(f'{yesterday_date} {stock_code} price : {yesterday_price}')
+
