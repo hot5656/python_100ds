@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import json
 import re
 import pandas as pd
+from io import StringIO
 
 # 計算字符實際寬度，處理中英文字符
 def get_display_width(text):
@@ -218,6 +219,46 @@ def getAllInfo2(stock):
         df = pd.DataFrame()
 
     return df
+
+def Get_Month_StockPrice_OTC(Symbol, Year):
+    # 設定目標 URL (POST 請求的地址)
+    url = 'https://www.tpex.org.tw/web/stock/statistics/monthly/st44.php?l=zh-tw'
+
+    # 設定表單資料，這裡模擬提交年份和股票代號 (以 113 年與 00679B 為例)
+    payload = {
+        'yy': Year,  # '2024' 民國 113 年
+        'input_stock_code': Symbol  # 股票代碼
+    }
+
+    # 發送 POST 請求
+    response = requests.post(url, data=payload)
+
+    # 檢查請求是否成功
+    if response.status_code == 200:
+        # 嘗試將 HTML 轉換成 pandas DataFrame
+        try:
+            # 使用 StringIO 包裝 response.text
+            html_content = StringIO(response.text)
+
+            tables = pd.read_html(html_content)
+
+            # 假設我們要的是第一個表格 (根據網頁結構調整)
+            StockPrice = tables[2]
+
+            StockPrice = StockPrice.rename(columns={'年': 'Year'})
+            StockPrice = StockPrice.rename(columns={'月': 'Month'})
+            StockPrice = StockPrice.rename(columns={'收市最高價': 'High'})
+            StockPrice = StockPrice.rename(columns={'收市最低價': 'Low'})
+            StockPrice = StockPrice.rename(columns={'收市平均價': 'Average'})
+            StockPrice = StockPrice.rename(columns={'成交筆數': 'Volume'})
+            # print(StockPrice)
+            # print(StockPrice.columns)
+        except:
+             StockPrice = pd.DataFrame()
+    else :
+         StockPrice = pd.DataFrame()
+
+    return StockPrice
 
 def Get_Month_StockPrice(Symbol, Date):
     url = f'https://www.twse.com.tw/pcversion/zh/exchangeReport/FMSRFK?response=json&date={Date}&stockNo={Symbol}'
