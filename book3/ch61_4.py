@@ -9,6 +9,7 @@ from datetime import datetime
 def getAllInfo(stock):
     # 定義目標網站的 URL (Yahoo 財經台股例子)
     url = f'https://tw.stock.yahoo.com/quote/{stock}/dividend'
+    print(f'url 1={url}')
 
     # 發送 GET 請求到網站
     response = requests.get(url)
@@ -62,9 +63,13 @@ def getAllInfo(stock):
 def getAllInfo2(stock):
     # 定義目標網站的 URL (Yahoo 財經台股例子)
     url = f"https://tw.stock.yahoo.com/quote/{stock}/dividend"
+    print(f'url 2={url}')
 
     # 發送 GET 請求到網站
     response = requests.get(url)
+
+    print(response)
+
 
     # 如果請求成功，則繼續處理
     if response.status_code == 200:
@@ -115,6 +120,7 @@ def getAllInfo2(stock):
 
     return df
 
+# OTC 年月報(含當月)
 def Get_Month_StockPrice_OTC(Symbol, Year):
     # 設定目標 URL (POST 請求的地址)
     url = 'https://www.tpex.org.tw/web/stock/statistics/monthly/st44.php?l=zh-tw'
@@ -177,6 +183,7 @@ def Get_Month_StockPrice_OTC(Symbol, Year):
 
     # return StockPrice
 
+# 上市 年月報(不含當月)
 def Get_Month_StockPrice(Symbol, Date):
     url = f'https://www.twse.com.tw/pcversion/zh/exchangeReport/FMSRFK?response=json&date={Date}&stockNo={Symbol}'
 
@@ -210,11 +217,11 @@ def Get_Month_StockPrice(Symbol, Date):
     return StockPrice
 
 # stock_code = '9921'
-# stock_code = '0056'
+stock_code = '0056'
 # stock_code = '00919'
 # stock_code = '00657'
 # stock_code = '00679B'
-stock_code = '00662'
+# stock_code = '00662'
 df_all = getAllInfo2(stock_code)
 print(df_all)
 print(len(df_all))

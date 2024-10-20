@@ -81,6 +81,7 @@ def Get_IndexPrice(Date):
     except :
         return []
 
+# 上市 月日報
 def Get_Day_StockPrice(Symbol, Date):
 
     url = f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={Date}&stockNo={Symbol}'
@@ -107,10 +108,20 @@ def Get_Day_StockPrice(Symbol, Date):
 
 
     StockPrice = StockPrice[['Open','High','Low','Close','Volume']]
-    # print(StockPrice)
+    print(StockPrice)
+
+    # 計算本月的最高價、最低價和平均收盤價
+    highest_price = StockPrice['Close'].max()
+    lowest_price = StockPrice['Low'].min()
+    average_close_price = round(StockPrice['Close'].mean(), 2)
+
+    print(f"本月最高價: {highest_price}")
+    print(f"本月最低價: {lowest_price}")
+    print(f"本月平均收盤價: {average_close_price}")
     return StockPrice
 
 stock_code = '9921'
+stock_code = '0056'
 today = datetime.now().strftime('%Y%m%d')
 index = Current_Index()
 index2 = Current_Index2()

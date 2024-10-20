@@ -86,6 +86,7 @@ def etf_rate(title, etfs):
         # print(df_all)
         print(f"({i+1:2}) stock_code={stock_code}")
 
+        this_year = int(datetime.now().strftime('%Y'))
         if len(df_all) == 0:
             year_int = int(datetime.now().strftime('%Y'))
             point_stock = 'wait'
@@ -96,6 +97,10 @@ def etf_rate(title, etfs):
                 year_start = year + '0101'
 
                 if point_stock == 'wait':
+                    # if this_year == year_int:
+                    #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
+                    # else:
+                    #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     if len(month_data_stock) == 0:
                         month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
@@ -104,6 +109,10 @@ def etf_rate(title, etfs):
                         month_data_OTC = pd.DataFrame()
                         point_stock = 'stock'
                 elif point_stock == 'stock':
+                    # if this_year == year_int:
+                    #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
+                    # else:
+                    #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                 else:
                     # otc
@@ -132,6 +141,10 @@ def etf_rate(title, etfs):
                 year= row.values[0]
                 # print(f'year={year}')
                 year_start = year + '0101'
+                # if this_year == int(year):
+                #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
+                # else:
+                #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                 month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                 if len(month_data_stock) == 0:
                     month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
@@ -165,42 +178,6 @@ def etf_rate(title, etfs):
                     # print(f'1st={year_1st_price}, last={year_last_price}')
                     rate = round((((year_last_price * ( 1 + stock_dividend/100) + cash_dividend)/year_1st_price) - 1) * 100, 2)
                     print(f"{year}  股價: {year_1st_price:7} --> {year_last_price:7}, 現金股利={cash_dividend:5}, 股票股利={stock_dividend:5}, 值利率={rate:7}%")
-                    # break
-
-
-
-        # for index, row in df_all.iterrows():
-        #     year= row.values[0]
-        #     year_start = year + '0101'
-
-        #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
-        #     if len(month_data_stock) == 0:
-        #         month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
-        #     else:
-        #         month_data_OTC = pd.DataFrame()
-
-        #     if len(month_data_stock) == 0 and len(month_data_OTC) == 0:
-        #         print(f"{year} - 資料不足")
-        #     else:
-        #         if row['現金股利'] =='-':
-        #             cash_dividend = 0
-        #         else:
-        #             cash_dividend = float(row['現金股利'])
-
-        #         if row['股票股利'] =='-':
-        #             stock_dividend = 0
-        #         else:
-        #             stock_dividend = float(row['股票股利'])
-
-        #         if len(month_data_stock) != 0 :
-        #             year_1st_price =  month_data_stock.iloc[0]["Average"]
-        #             year_last_price = month_data_stock.iloc[-1]["Average"]
-        #         else:
-        #             year_1st_price =  month_data_OTC.iloc[0]["Average"]
-        #             year_last_price = month_data_OTC.iloc[-1]["Average"]
-
-        #         rate = round((((year_last_price * ( 1 + stock_dividend/100) + cash_dividend)/year_1st_price) - 1) * 100, 2)
-        #         print(f"{year}  股價: {year_1st_price:7} --> {year_last_price:7}, 現金股利={cash_dividend:5}, 股票股利={stock_dividend:5}, 值利率={rate:7}%")
 
 arguments = sys.argv[1:]
 if len(arguments) !=0:

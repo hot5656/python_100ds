@@ -220,6 +220,7 @@ def getAllInfo2(stock):
 
     return df
 
+# OTC 年月報(含當月)
 def Get_Month_StockPrice_OTC(Symbol, Year):
     # 設定目標 URL (POST 請求的地址)
     url = 'https://www.tpex.org.tw/web/stock/statistics/monthly/st44.php?l=zh-tw'
@@ -260,7 +261,8 @@ def Get_Month_StockPrice_OTC(Symbol, Year):
 
     return StockPrice
 
-def Get_Month_StockPrice(Symbol, Date):
+# 上市 年月報(不含當月)
+def Get_Month_StockPrice(Symbol, Date, Show=False):
     url = f'https://www.twse.com.tw/pcversion/zh/exchangeReport/FMSRFK?response=json&date={Date}&stockNo={Symbol}'
 
     data = requests.get(url).text
@@ -288,8 +290,83 @@ def Get_Month_StockPrice(Symbol, Date):
         StockPrice = StockPrice[['High','Low','Average','Volume']]
     except:
         StockPrice = pd.DataFrame()
-    # print(StockPrice)
+    if Show:
+        print(StockPrice)
     return StockPrice
+
+# 上市 年月報(含當月)
+def Get_Month_StockPrice_AddCurrent(Symbol, Date, Show=False):
+    year_start = Date
+    month_data_stock = Get_Month_StockPrice(Symbol, Date, False)
+    month_price = Get_Month_analyze_StockPrice(Symbol, Date, False)
+    print(month_price)
+
+    # 構造一個新的DataFrame來保存本月的數據
+    current_month = Date[:6]  # 獲取當前年月
+    new_row = pd.DataFrame({
+        'High': [month_price['High']],
+        'Low': [month_price['Low']],
+        'Average': [month_price['Average']],
+        'Volume': [month_price.get('Volume', 0)]  # 假設 Volume 存在於 month_price
+    }, index=[int(Date[4:6])])  # 使用當前月份作為索引
+
+    # 將當月數據加入到 `month_data_stock` 中
+    month_data_stock = month_data_stock._append(new_row)
+
+    # 打印合併後的結果
+    if Show:
+        print(month_data_stock)
+
+    return month_data_stock
+
+# 上市 當月統計
+def Get_Month_analyze_StockPrice(Symbol, Date, Show=True):
+    # need today
+    Date = datetime.now().strftime('%Y%m%d')
+    print(f"=== {Symbol}-{Date} ===")
+
+    month_total = {}
+    url = f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={Date}&stockNo={Symbol}'
+
+    data = requests.get(url).text
+    json_data = json.loads(data)
+
+    Stock_data = json_data['data']
+
+    StockPrice = pd.DataFrame(Stock_data, columns = ['Date','Volume','Volume_Cash','Open','High','Low','Close','Change','Order'])
+
+    StockPrice['Date'] = StockPrice['Date'].str.replace('/','').astype(int) + 19110000
+    StockPrice['Date'] = pd.to_datetime(StockPrice['Date'].astype(str))
+    StockPrice['Volume'] = StockPrice['Volume'].str.replace(',','').astype(float)/1000
+    StockPrice['Volume_Cash'] = StockPrice['Volume_Cash'].str.replace(',','').astype(float)
+    StockPrice['Order'] = StockPrice['Order'].str.replace(',','').astype(float)
+
+    StockPrice['Open'] = StockPrice['Open'].str.replace(',','').astype(float)
+    StockPrice['High'] = StockPrice['High'].str.replace(',','').astype(float)
+    StockPrice['Low'] = StockPrice['Low'].str.replace(',','').astype(float)
+    StockPrice['Close'] = StockPrice['Close'].str.replace(',','').astype(float)
+
+    StockPrice = StockPrice.set_index('Date', drop = True)
+
+
+    StockPrice = StockPrice[['Open','High','Low','Close','Volume']]
+    if Show:
+        print(StockPrice)
+
+    # 計算本月的最高價、最低價和平均收盤價
+    highest_price = StockPrice['Close'].max()
+    lowest_price = StockPrice['Low'].min()
+    average_close_price = round(StockPrice['Close'].mean(), 2)
+
+    if Show:
+        print(f"本月最高價: {highest_price}")
+        print(f"本月最低價: {lowest_price}")
+        print(f"本月平均收盤價: {average_close_price}")
+
+    month_total['High'] = highest_price
+    month_total['Low'] = lowest_price
+    month_total['Average'] = average_close_price
+    return month_total
 
 if __name__ == '__main__':
     stock_code = "0050"

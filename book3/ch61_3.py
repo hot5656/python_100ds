@@ -6,6 +6,7 @@ import numpy as np
 import json
 import requests
 
+# 上市 年月報(不含當月)
 def Get_StockPrice(Symbol, Date):
     url = f'https://www.twse.com.tw/pcversion/zh/exchangeReport/FMSRFK?response=json&date={Date}&stockNo={Symbol}'
 
@@ -31,4 +32,5 @@ def Get_StockPrice(Symbol, Date):
     return StockPrice
 
 if __name__ == '__main__':
-    data = Get_StockPrice('9921','20230101')
+    # data = Get_StockPrice('9921','20230101')
+    data = Get_StockPrice('0056','20241001')
