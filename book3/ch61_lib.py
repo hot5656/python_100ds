@@ -8,6 +8,7 @@ import json
 import re
 import pandas as pd
 from io import StringIO
+import yfinance as yf
 
 # 計算字符實際寬度，處理中英文字符
 def get_display_width(text):
@@ -374,6 +375,34 @@ def Get_Month_analyze_StockPrice(Symbol, Date, Show=False):
     month_total['Low'] = lowest_price
     month_total['Average'] = average_close_price
     return month_total
+
+# 取得年度月份指數統計
+def fetch_taiex_monthly(year):
+    # 'TWII.TW' is the symbol for Taiwan Stock Exchange Index on Yahoo Finance
+    taiex = yf.Ticker('^TWII')
+
+    # Define the start and end dates for the given year
+    start_date = f'{year}-01-01'
+    end_date = f'{year}-12-31'
+
+    # Fetch historical data for the specific year (on a daily basis)
+    historical_data = taiex.history(start=start_date, end=end_date, interval='1d')
+
+    # Resample the data to monthly frequency, taking the last closing price of each month
+    # monthly_data = historical_data['Close'].resample('M').last().reset_index()
+    # Resample the data to monthly frequency, taking the average closing price of each month
+    monthly_data = historical_data['Close'].resample('ME').mean().reset_index()
+
+    # Extract the year and month
+    monthly_data['Year'] = monthly_data['Date'].dt.year
+    monthly_data['Month'] = monthly_data['Date'].dt.month
+
+    # Organize the data into a list of dictionaries
+    index_values = monthly_data[['Year', 'Month', 'Close']].to_dict('records')
+
+    # print(round(monthly_data['Close'].iloc[0],2))
+    # print(round(monthly_data['Close'].iloc[-1],2))
+    return index_values
 
 if __name__ == '__main__':
     stock_code = "0050"
