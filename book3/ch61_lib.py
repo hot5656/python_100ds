@@ -299,7 +299,7 @@ def Get_Month_StockPrice_AddCurrent(Symbol, Date, Show=False):
     year_start = Date
     month_data_stock = Get_Month_StockPrice(Symbol, Date, False)
     month_price = Get_Month_analyze_StockPrice(Symbol, Date, False)
-    print(month_price)
+    # print(month_price)
 
     # 構造一個新的DataFrame來保存本月的數據
     current_month = Date[:6]  # 獲取當前年月
@@ -316,14 +316,14 @@ def Get_Month_StockPrice_AddCurrent(Symbol, Date, Show=False):
     # 打印合併後的結果
     if Show:
         print(month_data_stock)
-
+    # print(f'{Symbol} {Date} {month_data_stock}')
     return month_data_stock
 
 # 上市 當月統計
-def Get_Month_analyze_StockPrice(Symbol, Date, Show=True):
+def Get_Month_analyze_StockPrice(Symbol, Date, Show=False):
     # need today
     Date = datetime.now().strftime('%Y%m%d')
-    print(f"=== {Symbol}-{Date} ===")
+    # print(f"=== {Symbol}-{Date} ===")
 
     month_total = {}
     url = f'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date={Date}&stockNo={Symbol}'
@@ -331,9 +331,16 @@ def Get_Month_analyze_StockPrice(Symbol, Date, Show=True):
     data = requests.get(url).text
     json_data = json.loads(data)
 
+    # print(json_data)
     Stock_data = json_data['data']
 
     StockPrice = pd.DataFrame(Stock_data, columns = ['Date','Volume','Volume_Cash','Open','High','Low','Close','Change','Order'])
+
+    # print(StockPrice)
+    # 移除 'Open' 欄位中為 '--' 的行
+    #      Date   Volume Volume_Cash   Open   High    Low  Close Change Order
+    # 9   113/10/17      557      19,643     --     --     --     --   0.00    91
+    StockPrice = StockPrice[StockPrice['Open'] != '--']
 
     StockPrice['Date'] = StockPrice['Date'].str.replace('/','').astype(int) + 19110000
     StockPrice['Date'] = pd.to_datetime(StockPrice['Date'].astype(str))
