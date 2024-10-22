@@ -1,4 +1,4 @@
-# 值利率列表(不含本月)
+# 值利率列表(含本月)
 # python .\ch61_10.py 1 : show eft list 1
 # python .\ch61_10.py 2 : show eft list 2
 # python .\ch61_10.py 3 : show eft list 3
@@ -80,7 +80,6 @@ def etf_rate(title, etfs):
     print(f"==== {title} ===")
     for i, stock_code in enumerate(etfs):
         df_all = getAllInfo2(stock_code)
-        # print(df_all)
         print(f"({i+1:2}) stock_code={stock_code}")
 
         this_year = int(datetime.now().strftime('%Y'))
@@ -96,7 +95,7 @@ def etf_rate(title, etfs):
 
                 if point_stock == 'wait':
                     # if this_year == year_int:
-                    #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, today)
+                    #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
                     # else:
                     #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
@@ -105,14 +104,14 @@ def etf_rate(title, etfs):
                         point_stock = 'otc'
                     else:
                         if this_year == year_int:
-                            month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, today)
+                            month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
                         else:
                             month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                         month_data_OTC = pd.DataFrame()
                         point_stock = 'stock'
                 elif point_stock == 'stock':
                     if this_year == year_int:
-                        month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, today)
+                        month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
                     else:
                         month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_OTC = pd.DataFrame()
@@ -147,7 +146,7 @@ def etf_rate(title, etfs):
                 year_start = year + '0101'
                 # if this_year == int(year):
                 #     若為 OTC 會 error
-                #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, today)
+                #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
                 # else:
                 #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
 
@@ -158,8 +157,9 @@ def etf_rate(title, etfs):
                 if len(month_data_stock) == 0:
                     month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
                 else:
+                    month_data_OTC = pd.DataFrame()
                     if this_year == int(year):
-                        month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, today)
+                        month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
                     else:
                         month_data_stock = Get_Month_StockPrice(stock_code, year_start)
 

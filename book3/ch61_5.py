@@ -120,7 +120,7 @@ def Get_Day_StockPrice(Symbol, Date):
     print(f"本月平均收盤價: {average_close_price}")
     return StockPrice
 
-stock_code = '9921'
+# stock_code = '9921'
 stock_code = '0056'
 today = datetime.now().strftime('%Y%m%d')
 index = Current_Index()
