@@ -72,16 +72,85 @@ etf_list3 = [
 ]
 
 etf_list4 = [
-    '00662',
-    '0056',
+    # bank last
+    # '6005',
+    # '6024',
+    # 小車金融
+    # '5880',
+    # '2880',
+    # '2886',
+    # 中鋼,台塑四寶
+    '2002',
+    '1301',
+    '1303',
+    '1326',
+    '6505',
+]
+
+bank_list5 = [
+    '2801',
+    '2809',
+    '2812',
+    '2816',
+    '2820',
+    '2832',
+    '2834',
+    '2836',
+    '2836A',
+    '2838',
+    '2838A',
+    '2845',
+    '2849',
+    '2850',
+    '2851',
+    '2852',
+    '2855',
+    '2867',
+    '2880',
+    '2881',
+    '2881A',
+    '2881B',
+    '2881C',
+    '2882',
+    '2882A',
+    '2882B',
+    '2883',
+    '2883B',
+    '2884',
+    '2885',
+    '2886',
+    '2887',
+    '2887E',
+    '2887F',
+    '2887Z1',
+    '2888',
+    '2888A',
+    '2888B',
+    '2889',
+    '2890',
+    '2891',
+    '2891B',
+    '2891C',
+    '2892',
+    '2897',
+    '2897B',
+    '5876',
+    '5880',
+    '6005',
+    '6024',
 ]
 
 def etf_rate(title, etfs):
+    stocks= get_stock_code()
     print(f"==== {title} ===")
+    # print(etfs)
     for i, stock_code in enumerate(etfs):
         df_all = getAllInfo2(stock_code)
-        print(f"({i+1:2}) stock_code={stock_code}")
 
+        try :
+            print(f"({i+1:2}) stock_code={stock_code} {stocks.loc[stock_code, 'Name']}")
+        except :
+            print(f"({i+1:2}) stock_code={stock_code} ????")
         this_year = int(datetime.now().strftime('%Y'))
         today = datetime.now().strftime('%Y%m%d')
         if len(df_all) == 0:
@@ -199,6 +268,8 @@ if len(arguments) !=0:
         etf_rate("指數 ETF", etf_list2)
     elif arguments[0] == '3':
         etf_rate("美國長期公債", etf_list3)
+    elif arguments[0] == '4':
+        etf_rate("金融股", bank_list5)
     elif arguments[0] == 't':
         etf_rate("test", etf_list4)
 else:
