@@ -104,5 +104,15 @@ def Get_OTcPrice(Symbol):
 
 if __name__ == '__main__':
     # data = Get_StockPrice('9921','20230101')
-    data = Get_StockPrice('0056','20241001')
-    data = Get_OTcPrice('00679B')
+    # data = Get_StockPrice('0056','20241001')
+    # data = Get_OTcPrice('00679B')
+    data = Get_StockPrice('00915','20240101')
+    data = Get_StockPrice('00915','20240201')
+    data = Get_StockPrice('00915','20240301')
+    data = Get_StockPrice('00915','20240401')
+    data = Get_StockPrice('00915','20240501')
+    data = Get_StockPrice('00915','20240601')
+    data = Get_StockPrice('00915','20240701')
+    data = Get_StockPrice('00915','20240801')
+    data = Get_StockPrice('00915','20240901')
+    data = Get_StockPrice('00915','20241001')

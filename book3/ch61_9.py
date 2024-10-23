@@ -1,5 +1,6 @@
 # get ETF 基本資料(依規模排序)+指數
 # python .\ch61_9.py etf : show eft
+# python .\ch61_9.py 0 : show eft list 0 追蹤股票
 # python .\ch61_9.py 1 : show eft list 1
 # python .\ch61_9.py 2 : show eft list 2
 # python .\ch61_9.py 3 : show eft list 3
@@ -10,6 +11,14 @@ import sys
 import re
 
 # https://www.stockq.org/etf/etf_high_dividend.php
+
+etf_list0 = [
+    '00713',
+    '00915',
+    '0050',
+    '006208',
+]
+
 etf_list1 = [
     '0056',
     '00878',
@@ -129,6 +138,8 @@ if len(arguments) != 0:
         etf_basic("高股息 ETF", etf_list1)
         etf_basic("指數 ETF", etf_list2)
         etf_basic("美國長期公債", etf_list3)
+    elif arguments[0] == '0':
+        etf_basic("追蹤 ETF", etf_list0)
     elif arguments[0] == '1':
         etf_basic("高股息 ETF", etf_list1)
     elif arguments[0] == '2':
