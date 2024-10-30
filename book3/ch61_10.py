@@ -71,23 +71,7 @@ etf_list3 = [
     '00857B',
 ]
 
-etf_list4 = [
-    # bank last
-    # '6005',
-    # '6024',
-    # 小車金融
-    # '5880',
-    # '2880',
-    # '2886',
-    # 中鋼,台塑四寶
-    '2002',
-    '1301',
-    '1303',
-    '1326',
-    '6505',
-]
-
-bank_list5 = [
+bank_list4 = [
     '2801',
     '2809',
     '2812',
@@ -138,6 +122,27 @@ bank_list5 = [
     '5880',
     '6005',
     '6024',
+]
+
+etf_list9 = [
+    # 食品 and 2 ETF
+    '1231',
+    '1216',
+    '00905',
+    '00922',
+    # bank last
+    # '6005',
+    # '6024',
+    # 小車金融
+    # '5880',
+    # '2880',
+    # '2886',
+    # 中鋼,台塑四寶
+    # '2002',
+    # '1301',
+    # '1303',
+    # '1326',
+    # '6505',
 ]
 
 def etf_rate(title, etfs):
@@ -269,9 +274,9 @@ if len(arguments) !=0:
     elif arguments[0] == '3':
         etf_rate("美國長期公債", etf_list3)
     elif arguments[0] == '4':
-        etf_rate("金融股", bank_list5)
+        etf_rate("金融股", bank_list4)
     elif arguments[0] == 't':
-        etf_rate("test", etf_list4)
+        etf_rate("test", etf_list9)
 else:
     etf_rate("高股息 ETF", etf_list1)
     etf_rate("指數 ETF", etf_list2)
