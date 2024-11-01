@@ -125,11 +125,14 @@ bank_list4 = [
 ]
 
 etf_list9 = [
+    # bank error year 2024/11/01
+    # '2887F',
+    # '2891C',
     # 食品 and 2 ETF
-    '1231',
-    '1216',
-    '00905',
-    '00922',
+    # '1231',
+    # '1216',
+    # '00905',
+    # '00922',
     # bank last
     # '6005',
     # '6024',
@@ -138,11 +141,11 @@ etf_list9 = [
     # '2880',
     # '2886',
     # 中鋼,台塑四寶
-    # '2002',
-    # '1301',
-    # '1303',
-    # '1326',
-    # '6505',
+    '2002',
+    '1301',
+    '1303',
+    '1326',
+    '6505',
 ]
 
 def etf_rate(title, etfs):
@@ -155,23 +158,22 @@ def etf_rate(title, etfs):
         try :
             print(f"({i+1:2}) stock_code={stock_code} {stocks.loc[stock_code, 'Name']}")
         except :
-            print(f"({i+1:2}) stock_code={stock_code} ????")
+            # 加入OTC名稱
+            info = get_dividend_list(stock_code)
+            print(f"({i+1:2}) stock_code={stock_code} {info['名稱']}")
+
         this_year = int(datetime.now().strftime('%Y'))
         today = datetime.now().strftime('%Y%m%d')
+
         if len(df_all) == 0:
             year_int = int(datetime.now().strftime('%Y'))
             point_stock = 'wait'
             list_years = []
             while year_int >= 1990 :
                 year = str(year_int)
-                # print(f"year={year}")
                 year_start = year + '0101'
 
                 if point_stock == 'wait':
-                    # if this_year == year_int:
-                    #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
-                    # else:
-                    #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     if len(month_data_stock) == 0:
                         month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
@@ -189,7 +191,6 @@ def etf_rate(title, etfs):
                     else:
                         month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                     month_data_OTC = pd.DataFrame()
-                    # month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                 else:
                     # otc
                     month_data_OTC = Get_Month_StockPrice_OTC(stock_code, year)
@@ -209,23 +210,13 @@ def etf_rate(title, etfs):
                 # print(f"{year}  股價: {year_1st_price:7} --> {year_last_price:7}, 現金股利=*****, 股票股利=***** 值利率={rate:7}%")
                 list_years.append(f"{year}  股價: {year_1st_price:7} --> {year_last_price:7}, 現金股利=*****, 股票股利=***** 值利率={rate:7}%")
                 year_int -= 1
-            # print(list_years)
             for item in reversed(list_years):
                 print(item)
         else :
             for index, row in df_all.iterrows():
                 # print(f"第 {index+1} 行的值: {row.values}")
                 year= row.values[0]
-                # print(f'year={year}')
                 year_start = year + '0101'
-                # if this_year == int(year):
-                #     若為 OTC 會 error
-                #     month_data_stock = Get_Month_StockPrice_AddCurrent(stock_code, year_start)
-                # else:
-                #     month_data_stock = Get_Month_StockPrice(stock_code, year_start)
-
-
-                # month_data_stock = Get_Month_StockPrice(stock_code, year_start)
 
                 month_data_stock = Get_Month_StockPrice(stock_code, year_start)
                 if len(month_data_stock) == 0:
@@ -238,10 +229,8 @@ def etf_rate(title, etfs):
                         month_data_stock = Get_Month_StockPrice(stock_code, year_start)
 
                 if len(month_data_stock) == 0 and len(month_data_OTC) == 0:
-                    # print("no stock data...")
                     print(f"{year} - 資料不足")
                 else:
-                    # print(row)
                     if row['現金股利'] =='-':
                         cash_dividend = 0
                     else:

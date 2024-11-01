@@ -249,46 +249,47 @@ def getAllInfo2(stock, Show=False):
 
 # OTC 年月報(含當月)
 def Get_Month_StockPrice_OTC(Symbol, Year, Show=False):
+    # 修正 OTC 年月報 - 原 API 更動
     # 設定目標 URL (POST 請求的地址)
-    url = 'https://www.tpex.org.tw/web/stock/statistics/monthly/st44.php?l=zh-tw'
+    url = 'https://www.tpex.org.tw/www/zh-tw/statistics/monthlyStock'
 
     # 設定表單資料，這裡模擬提交年份和股票代號 (以 113 年與 00679B 為例)
     payload = {
-        'yy': Year,  # '2024' 民國 113 年
-        'input_stock_code': Symbol  # 股票代碼
+        'date': Year,  # '2024' 民國 113 年
+        'code': Symbol,  # 股票代碼
+        'response': 'json'
     }
 
     # 發送 POST 請求
     response = requests.post(url, data=payload)
 
-    # 檢查請求是否成功
-    if response.status_code == 200:
-        # 嘗試將 HTML 轉換成 pandas DataFrame
-        try:
-            # 使用 StringIO 包裝 response.text
-            html_content = StringIO(response.text)
+    columns = ['Year', 'Month', 'High', 'Low', 'Average', 'Volume']
+    StockPrices = pd.DataFrame(columns=columns)
 
-            tables = pd.read_html(html_content)
+    if response and response.status_code == 200:
+        # remove head string ")]}',"
+        json_text = response.text.replace(")]}',", "")
+        try :
+            # json to dict
+            datas = json.loads(json_text)
 
-            # 假設我們要的是第一個表格 (根據網頁結構調整)
-            StockPrice = tables[2]
-
-            StockPrice = StockPrice.rename(columns={'年': 'Year'})
-            StockPrice = StockPrice.rename(columns={'月': 'Month'})
-            StockPrice = StockPrice.rename(columns={'收市最高價': 'High'})
-            StockPrice = StockPrice.rename(columns={'收市最低價': 'Low'})
-            StockPrice = StockPrice.rename(columns={'收市平均價': 'Average'})
-            StockPrice = StockPrice.rename(columns={'成交筆數': 'Volume'})
-            # print(StockPrice.columns)
-        except:
-             StockPrice = pd.DataFrame()
-    else :
-         StockPrice = pd.DataFrame()
+            for item in datas['tables'][0]['data']:
+                row = {
+                    'Year': item[0],
+                    'Month': item[1],
+                    'High': item[2],
+                    'Low': item[3],
+                    'Average': float(item[4]),
+                    'Volume': item[5],
+                }
+                StockPrices.loc[len(StockPrices)] = row
+        except :
+            pass
 
     if Show:
         print(f'{inspect.currentframe().f_code.co_name} stock_code={Symbol} year={Year}')
-        print(StockPrice)
-    return StockPrice
+        print(StockPrices)
+    return StockPrices
 
 # 上市 年月報(不含當月)
 def Get_Month_StockPrice(Symbol, Date, Show=False):
@@ -322,19 +323,24 @@ def Get_Month_StockPrice_AddCurrent(Symbol, Date, Show=False):
     year_start = Date
     today = datetime.now().strftime('%Y%m%d')
     month_data_stock = Get_Month_StockPrice(Symbol, Date, False)
-    month_price = Get_Month_analyze_StockPrice(Symbol, today, False)
 
-    # 構造一個新的DataFrame來保存本月的數據
-    current_month = today[:6]  # 獲取當前年月
-    new_row = pd.DataFrame({
-        'High': [month_price['High']],
-        'Low': [month_price['Low']],
-        'Average': [month_price['AverageLevel']],
-        'Volume': [month_price.get('Volume', 0)]  # 假設 Volume 存在於 month_price
-    }, index=[int(today[4:6])])  # 使用當前月份作為索引
+    try :
+        # 若無當月資料則不加-如當天為1號
+        month_price = Get_Month_analyze_StockPrice(Symbol, today, False)
 
-    # 將當月數據加入到 `month_data_stock` 中
-    month_data_stock = month_data_stock._append(new_row)
+        # 構造一個新的DataFrame來保存本月的數據
+        current_month = today[:6]  # 獲取當前年月
+        new_row = pd.DataFrame({
+            'High': [month_price['High']],
+            'Low': [month_price['Low']],
+            'Average': [month_price['AverageLevel']],
+            'Volume': [month_price.get('Volume', 0)]  # 假設 Volume 存在於 month_price
+        }, index=[int(today[4:6])])  # 使用當前月份作為索引
+
+        # 將當月數據加入到 `month_data_stock` 中
+        month_data_stock = month_data_stock._append(new_row)
+    except :
+        pass
 
     # 打印合併後的結果
     if Show:

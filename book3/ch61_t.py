@@ -57,7 +57,8 @@ if len(arguments) !=0:
         Current_Index_Google(True)
     elif arguments[0] == '13':
         # get 單股基本資料
-        get_dividend_list("0056", True)
+        info = get_dividend_list("00687B", True)
+        print(info['名稱'])
     else:
         print(f"the index {arguments[0]} not support")
 else:
